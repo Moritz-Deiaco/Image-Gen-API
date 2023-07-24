@@ -7,32 +7,32 @@ from io import BytesIO
 class Geometry:
 
     @staticmethod
-    def rectangle(draw, x: int, y: int, width: int, height: int, rbg: tuple[int, int, int]):
+    def rectangle(draw, x: int, y: int, width: int, height: int, rgb: tuple[int, int, int]):
 
         x2 = x + width
         y2 = y + height
 
-        draw.rectangle((x, y, x2, y2), fill=rbg, outline=None)
+        draw.rectangle((x, y, x2, y2), fill=rgb, outline=None)
 
     @staticmethod
-    def ellipse(draw, x: int, y: int, width: int, height: int, rbg: tuple[int, int, int]):
+    def ellipse(draw, x: int, y: int, width: int, height: int, rgb: tuple[int, int, int]):
 
         x2 = x + width
         y2 = y + height
 
-        draw.ellipse((x, y, x2, y2), fill=rbg, outline=None)
+        draw.ellipse((x, y, x2, y2), fill=rgb, outline=None)
 
     @staticmethod
-    def polygon(draw, x: int, y: int, radius: int, n_sites: int, rotation: int, rbg: tuple[int, int, int]):
+    def polygon(draw, x: int, y: int, radius: int, n_sites: int, rotation: int, rgb: tuple[int, int, int]):
 
         x += radius
         y += radius
 
         draw.regular_polygon(bounding_circle=(x, y, radius), n_sides=n_sites,
-                             rotation=rotation, fill=rbg, outline=None)
+                             rotation=rotation, fill=rgb, outline=None)
 
     @staticmethod
-    def text(draw, x: int, y: int, size: int, text: str, words_per_line: int, align: Literal["left", "rigt", "center"], rbg: tuple[int, int, int], font: Literal["serif", "sans-serif", "monospace"] | None):
+    def text(draw, x: int, y: int, size: int, text: str, words_per_line: int, align: Literal["left", "rigt", "center"], rgb: tuple[int, int, int], font: Literal["serif", "sans-serif", "monospace"] | None):
 
         if font != None and type(font) == str:
             if font == "serif":
@@ -52,4 +52,4 @@ class Geometry:
 
         text = "\n".join(tw.wrap(text))
 
-        draw.text((x, y), text, font=font, align=align, fill=rbg)
+        draw.text((x, y), text, font=font, align=align, fill=rgb)
