@@ -19,10 +19,12 @@ def gt_image():
     pen.text
 
     Geometry.rectangle(pen, 100, 100, 200, 200, (255, 155, 0))
-    Geometry.ellipse(pen, 100, 100, 200, 200, (255, 0, 0))
-    Geometry.polygon(pen, 100, 100, 100, 7, 0, (0, 255, 0))
-    Geometry.text(pen, 100, 100, 20, text, 30,
-                  "left", (255, 255, 255), "sans-serif")
+    Geometry.ellipse(draw=pen, x=100, y=100, height=200,
+                     width=200, rbg=(255, 0, 0))
+    Geometry.polygon(draw=pen, x=100, y=100, radius=100,
+                     n_sites=7, rotation=0, rbg=(0, 255, 0))
+    Geometry.text(draw=pen, x=100, y=100, size=100, text=text, words_per_line=30,
+                  align="left", rgb=(255, 255, 255), font="sans-serif")
 
     image_binary = BytesIO()
     img.save(image_binary, "PNG")
