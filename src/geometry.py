@@ -1,10 +1,13 @@
 from PIL import ImageFont
+from textwrap import TextWrapper
+from typing import Literal
+from io import BytesIO
 
 
 class Geometry:
 
     @staticmethod
-    def rectangle(draw, x: int, y: int, width: int, height: int, RBG: tuple):
+    def rectangle(draw, x: int, y: int, width: int, height: int, RBG: tuple[int, int, int]):
 
         x2 = x + width
         y2 = y + height
@@ -13,7 +16,7 @@ class Geometry:
             RBG[0], RBG[1], RBG[2]), outline=None)
 
     @staticmethod
-    def ellipse(draw, x: int, y: int, width: int, height: int, RBG: tuple):
+    def ellipse(draw, x: int, y: int, width: int, height: int, RBG: tuple[int, int, int]):
 
         x2 = x + width
         y2 = y + height
@@ -22,7 +25,7 @@ class Geometry:
             RBG[0], RBG[1], RBG[2]), outline=None)
 
     @staticmethod
-    def polygon(draw, x: int, y: int, radius: int, n_sites: int, rotation: int, RBG: tuple):
+    def polygon(draw, x: int, y: int, radius: int, n_sites: int, rotation: int, RBG: tuple[int, int, int]):
 
         x += radius
         y += radius
@@ -32,11 +35,24 @@ class Geometry:
             RBG[0], RBG[1], RBG[2]), outline=None)
 
     @staticmethod
-    def text(draw, x: int, y: int, size: int, RBG: tuple, font=None):
+    def text(draw, x: int, y: int, size: int, text: str, words_per_line: int, align: Literal["left", "rigt", "center"], rgb: tuple[int, int, int], font: Literal["serif", "sans-serif", "monospace"] | None):
 
         if font != None and type(font) == str:
             if font == "serif":
-                font = ImageFont.truetype(
-                    filename='fonts/serif.ttf', size=size)
+                file = open("src/fonts/serif.ttf", "rb")
+            elif font == "sans-serif":
+                file = open("src/fonts/sans-serif.ttf", "rb")
+            elif font == "monospace":
+                file = open("src/fonts/mono.ttf", "rb")
+        else:
+            file = open("fonts/sans-serif.ttf", "rb")
 
-        draw.text()
+        bytes_font = BytesIO(file.read())
+        font = ImageFont.truetype(bytes_font, size)
+
+        tw = TextWrapper()
+        tw.width = words_per_line
+
+        text = "\n".join(tw.wrap(text))
+
+        draw.text((x, y), text, font=font, align=align, fill=rgb)

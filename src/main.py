@@ -1,10 +1,8 @@
 from flask import Flask, request, jsonify, send_file, request
-from PIL import Image
-from PIL import ImageDraw
-from PIL import ImageFont
+from PIL import Image, ImageFont, ImageDraw
 from geometry import Geometry
-
-from io import *
+import json
+from io import BytesIO
 
 
 app = Flask(__name__)
@@ -16,9 +14,15 @@ def gt_image():
 
     pen = ImageDraw.Draw(img)
 
+    text = "ALWAYS BE HAPPY(LAUGHING IS THE BEST MEDICINE)"
+
+    pen.text
+
     Geometry.rectangle(pen, 100, 100, 200, 200, (255, 155, 0))
     Geometry.ellipse(pen, 100, 100, 200, 200, (255, 0, 0))
     Geometry.polygon(pen, 100, 100, 100, 7, 0, (0, 255, 0))
+    Geometry.text(pen, 100, 100, 20, text, 30,
+                  "left", (255, 255, 255), "sans-serif")
 
     image_binary = BytesIO()
     img.save(image_binary, "PNG")
