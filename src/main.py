@@ -3,15 +3,33 @@ from PIL import Image, ImageFont, ImageDraw
 from geometry import Geometry
 import json
 from io import BytesIO
+import mysql.connector
 
 
 app = Flask(__name__)
 
+db = mysql.connector.connect(
+    host="root02.oc.host.endelon.link",
+    port="3306",
+    user="imagegenapidb",
+    passwd="7b3cehx5x17l",
+    database="imagegenapidb"
+)
 
-@app.route('/')
-def get_image():
+cursor = db.cursor()
 
-    data = json.load(open('src/test.json'))
+
+@app.route('/<user_id>/<image_id>')
+def get_image(user_id, image_id):
+
+    cursor.execute(
+        f"SELECT json_code FROM image_data WHERE image_id = {image_id} LIMIT 1")
+
+    result = cursor.fetchall()
+
+    print(user_id, image_id)
+
+    data = json.loads(result[0][0])
 
     width = data["size"]["width"]
     height = data["size"]["height"]
@@ -44,7 +62,13 @@ def get_image():
 
         elif geo_name == "text":
 
-            Geometry.text(draw=pen, x=geo_data["x"], y=geo_data["y"], size=geo_data["size"], text=geo_data["text"], words_per_line=geo_data["words_per_line"],
+            httptext = request.args.get(geo_data["httpid"])
+            if httptext:
+                text = httptext
+            else:
+                text = geo_data["text"]
+
+            Geometry.text(draw=pen, x=geo_data["x"], y=geo_data["y"], size=geo_data["size"], text=text, words_per_line=geo_data["words_per_line"],
                           align=geo_data["align"], rgb=(geo_data["color"]["r"], geo_data["color"]["g"], geo_data["color"]["b"]), font=geo_data["font_style"])
 
         else:

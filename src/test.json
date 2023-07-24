@@ -57,10 +57,10 @@
     "text": {
       "x": 200,
       "y": 100,
-      "size": 20,
+      "size": 40,
       "text": "jklsajflksdjf",
       "words_per_line": 20,
-      "id": "text_1",
+      "httpid": "text_1",
       "align": "right",
       "color": {
         "r": 255,
