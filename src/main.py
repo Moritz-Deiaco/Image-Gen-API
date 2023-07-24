@@ -8,26 +8,24 @@ import mysql.connector
 
 app = Flask(__name__)
 
-db = mysql.connector.connect(
-    host="root02.oc.host.endelon.link",
-    port="3306",
-    user="imagegenapidb",
-    passwd="7b3cehx5x17l",
-    database="imagegenapidb"
-)
 
-cursor = db.cursor()
+@app.route('/api/<image_id>')
+def get_image(image_id):
 
+    db = mysql.connector.connect(
+        host="root02.oc.host.endelon.link",
+        port="3306",
+        user="imagegenapidb",
+        passwd="7b3cehx5x17l",
+        database="imagegenapidb"
+    )
 
-@app.route('/<user_id>/<image_id>')
-def get_image(user_id, image_id):
+    cursor = db.cursor()
 
     cursor.execute(
         f"SELECT json_code FROM image_data WHERE image_id = {image_id} LIMIT 1")
 
     result = cursor.fetchall()
-
-    print(user_id, image_id)
 
     data = json.loads(result[0][0])
 
