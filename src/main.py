@@ -70,14 +70,48 @@ def get_image(image_id):
                           align=geo_data["align"], rgb=(geo_data["color"]["r"], geo_data["color"]["g"], geo_data["color"]["b"]), font=geo_data["font_style"])
         elif geo_name == "image":
 
-            httptext = request.args.get(geo_data["httpid"])
-            if httptext:
-                url = httptext
+            httpurl = request.args.get(geo_data["httpid"])
+            if httpurl:
+                url = httpurl
             else:
                 url = geo_data["image_url"]
 
+            httpw = request.args.get(geo_data["httpid"]+"_w")
+            if httpw:
+                width = int(httpw)
+            else:
+                width = geo_data["width"]
+
+            httph = request.args.get(geo_data["httpid"]+"_h")
+            if httph:
+                height = int(httph)
+            else:
+                height = geo_data["height"]
+
+            httpx = request.args.get(geo_data["httpid"]+"_x")
+            if httpx:
+                x = int(httpx)
+            else:
+                x = geo_data["x"]
+
+            httpy = request.args.get(geo_data["httpid"]+"_y")
+            if httpy:
+                y = int(httpy)
+            else:
+                y = geo_data["y"]
+
+            httpt = request.args.get(geo_data["httpid"]+"_t")
+            if httpt:
+
+                if int(httpt) == 1:
+                    t = True
+                else:
+                    t = False
+            else:
+                t = geo_data["transparent"]
+
             Geometry.image(
-                img, url, geo_data["x"], geo_data["y"], geo_data["transparent"], geo_data["width"], geo_data["height"])
+                img, url, x, y, t, width, height)
 
         else:
             continue
