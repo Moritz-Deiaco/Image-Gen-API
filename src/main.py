@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_file, request
+from flask import Flask, request, jsonify, send_file, request, abort
 from PIL import Image, ImageFont, ImageDraw
 from geometry import Geometry
 import json
@@ -68,6 +68,16 @@ def get_image(image_id):
 
             Geometry.text(draw=pen, x=geo_data["x"], y=geo_data["y"], size=geo_data["size"], text=text, words_per_line=geo_data["words_per_line"],
                           align=geo_data["align"], rgb=(geo_data["color"]["r"], geo_data["color"]["g"], geo_data["color"]["b"]), font=geo_data["font_style"])
+        elif geo_name == "image":
+
+            httptext = request.args.get(geo_data["httpid"])
+            if httptext:
+                url = httptext
+            else:
+                url = geo_data["image_url"]
+
+            Geometry.image(
+                img, url, geo_data["x"], geo_data["y"], geo_data["transparent"], geo_data["width"], geo_data["height"])
 
         else:
             continue
@@ -84,4 +94,4 @@ def get_image(image_id):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(port="6969", debug=True)

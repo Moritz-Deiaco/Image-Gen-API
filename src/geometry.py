@@ -1,13 +1,16 @@
-from PIL import ImageFont
+from PIL import Image, ImageFont, ImageDraw
 from textwrap import TextWrapper
 from typing import Literal
 from io import BytesIO
+
+import requests
+import validators
 
 
 class Geometry:
 
     @staticmethod
-    def rectangle(draw, x: int, y: int, width: int, height: int, rgb: tuple[int, int, int]):
+    def rectangle(draw: ImageDraw, x: int, y: int, width: int, height: int, rgb: tuple[int, int, int]):
 
         x2 = x + width
         y2 = y + height
@@ -15,7 +18,7 @@ class Geometry:
         draw.rectangle((x, y, x2, y2), fill=rgb, outline=None)
 
     @staticmethod
-    def ellipse(draw, x: int, y: int, width: int, height: int, rgb: tuple[int, int, int]):
+    def ellipse(draw: ImageDraw, x: int, y: int, width: int, height: int, rgb: tuple[int, int, int]):
 
         x2 = x + width
         y2 = y + height
@@ -23,7 +26,7 @@ class Geometry:
         draw.ellipse((x, y, x2, y2), fill=rgb, outline=None)
 
     @staticmethod
-    def polygon(draw, x: int, y: int, radius: int, n_sites: int, rotation: int, rgb: tuple[int, int, int]):
+    def polygon(draw: ImageDraw, x: int, y: int, radius: int, n_sites: int, rotation: int, rgb: tuple[int, int, int]):
 
         x += radius
         y += radius
@@ -32,7 +35,7 @@ class Geometry:
                              rotation=rotation, fill=rgb, outline=None)
 
     @staticmethod
-    def text(draw, x: int, y: int, size: int, text: str, words_per_line: int, align: Literal["left", "rigt", "center"], rgb: tuple[int, int, int], font: Literal["serif", "sans-serif", "monospace"] | None):
+    def text(draw: ImageDraw, x: int, y: int, size: int, text: str, words_per_line: int, align: Literal["left", "rigt", "center"], rgb: tuple[int, int, int], font: Literal["serif", "sans-serif", "monospace"] | None):
 
         if font != None and type(font) == str:
             if font == "serif":
@@ -53,3 +56,24 @@ class Geometry:
         text = "\n".join(tw.wrap(text))
 
         draw.text((x, y), text, font=font, align=align, fill=rgb)
+
+    @staticmethod
+    def image(image_to_paste_on: Image, image_url: str, x: int, y: int, mask: bool, width: int, height: int):
+
+        if not validators.url(image_url):
+            return False
+        else:
+            r = requests.get(
+                image_url, stream=True)
+            image_formats = ("image/png", "image/jpeg", "image/jpg")
+            if r.headers["content-type"] in image_formats:
+                r.raw.decode_content = True
+                image = Image.open(r.raw)
+
+                if width != image.size[0] or height != image.size[1]:
+                    image = image.resize((width, height))
+
+                if mask:
+                    image_to_paste_on.paste(image, (x, y), mask=image)
+                else:
+                    image_to_paste_on.paste(image, (x, y))

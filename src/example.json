@@ -68,6 +68,15 @@
         "b": 255
       },
       "font_style": "monospace"
+    },
+    "image": {
+      "httpid": "image_1",
+      "image_url": "https://picsum.photos/200/300",
+      "width": 200,
+      "height": 300,
+      "x": 10,
+      "y": 10,
+      "transparent": false
     }
   }
 }
